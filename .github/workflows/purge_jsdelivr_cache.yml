@@ -1,0 +1,44 @@
+name: Purge jsDelivr Cache
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  purge-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          echo "files=$(git diff --name-only HEAD^ HEAD | grep -E '\.(png|jpg|jpeg|gif|svg|webp)$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: Purge jsDelivr cache
+        if: steps.changed-files.outputs.files != ''
+        run: |
+          REPO="${{ github.repository }}"
+          BRANCH="${{ github.ref_name }}"
+          
+          count=0
+          for file in ${{ steps.changed-files.outputs.files }}; do
+            URL="https://purge.jsdelivr.net/gh/${REPO}@${BRANCH}/${file}"
+            echo "Purging: $URL"
+            curl -X POST "$URL" &
+            
+            count=$((count + 1))
+            
+            # Traiter par batch de 50
+            if [ $((count % 50)) -eq 0 ]; then
+              wait
+              sleep 2
+            fi
+          done
+          
+          wait
+          echo "Total fichiers purgés: $count"

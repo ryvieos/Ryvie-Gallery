@@ -27,9 +27,15 @@ jobs:
           
           count=0
           for file in ${{ steps.changed-files.outputs.files }}; do
-            URL="https://purge.jsdelivr.net/gh/${REPO}@${BRANCH}/${file}"
-            echo "Purging: $URL"
-            curl -X POST "$URL" &
+
+
+          curl -X POST "https://purge.jsdelivr.net/" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "path": [
+                "/gh/ryvieos/${REPO}@${BRANCH}/${file}"
+              ]
+            }'
             
             count=$((count + 1))
             

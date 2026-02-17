@@ -23,23 +23,17 @@ application-name/
 - Affine
 - Docuseal
 - Fossflow
-- GitLab
 - Jellyfin
-- LibreChat
 - Linkwarden
 - Mealie
 - Memos
 - N8N
-- Node-RED
 - Open-Notebook
-- Pi-hole
 - Rdrive
 - Rdrop
 - Rpictures
 - Rtransfer
-- Twenty
 - Vaultwarden
-- Webcheck
 
 ## 🔗 Intégration
 

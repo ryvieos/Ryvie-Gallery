@@ -22,29 +22,17 @@ jobs:
       - name: Purge jsDelivr cache
         if: steps.changed-files.outputs.files != ''
         run: |
-          REPO="${{ github.repository }}"
-          BRANCH="${{ github.ref_name }}"
-          
+          REPO="${{ github.repository }}"       # ex: ryvieos/Ryvie-Gallery
+          BRANCH="${{ github.ref_name }}"       # ex: main
+
           count=0
           for file in ${{ steps.changed-files.outputs.files }}; do
-
-
-          curl -X POST "https://purge.jsdelivr.net/" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "path": [
-                "/gh/ryvieos/${REPO}@${BRANCH}/${file}"
-              ]
-            }'
-            
+            # Guillemets DOUBLES → les variables sont expansées.
+            # Chemin = /gh/<owner>/<repo>@<branch>/<file> (REPO contient déjà owner/repo).
+            url="https://purge.jsdelivr.net/gh/${REPO}@${BRANCH}/${file}"
+            echo "Purge: $url"
+            curl -sS "$url" -o /dev/null
             count=$((count + 1))
-            
-            # Traiter par batch de 50
-            if [ $((count % 50)) -eq 0 ]; then
-              wait
-              sleep 2
-            fi
           done
-          
-          wait
+
           echo "Total fichiers purgés: $count"

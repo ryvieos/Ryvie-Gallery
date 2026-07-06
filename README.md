@@ -23,12 +23,14 @@ application-name/
 - Affine
 - Docuseal
 - Fossflow
+- Home Assistant
 - Jellyfin
 - Linkwarden
 - Mealie
 - Memos
 - N8N
 - Open-Notebook
+- OpenClaw
 - Rdrive
 - Rdrop
 - Rpictures
